@@ -1,5 +1,6 @@
 import bs4
 import re
+from dateutil import parser
 
 def get_race_tables(tables):
     women_table = None
@@ -38,3 +39,33 @@ def get_athletes(table):
                 athleteids.append(id)
                 athletelinks.append(link)
     return athletenames, athleteids, athletelinks
+
+def get_athlete_xc_meets(meets):
+    meetnames, meetdates, meetlinks, distances, times, places = list(), list(), list(), list(), list(), list()
+    for meet in meets:
+        trs = meet.find_all('tr')
+        for tr, idx in zip(trs, range(len(trs))):
+            if idx == 0:
+                meettitle = tr.find('a')
+                meetdate  = tr.find('span')
+                
+                meetdate  = parser.parse(meetdate.text)
+                meetname  = meettitle.text
+                meetlink  = meettitle['href']
+
+                meetnames.append(meetname)
+                meetdates.append(meetdate)
+                meetlinks.append(meetlink)
+            elif idx == 1:
+                tds          = tr.find_all('td')
+                for td, jdx in zip(tds, range(len(tds))):
+                    if jdx == 0:
+                        racedistance = str(td.text).strip()
+                    elif jdx == 1:
+                        time = str(td.text).strip()
+                    elif jdx == 2:
+                        place = str(td.text).strip()
+                distances.append(racedistance)
+                times.append(time)
+                places.append(place)
+    return meetnames, meetdates, meetlinks, distances, times, places

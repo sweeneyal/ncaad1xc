@@ -8,16 +8,18 @@ from dataclasses import dataclass
 @dataclass
 class Race:
     name         : str
+    distance     : int
     id           : int
+    link         : list
     athletes     : list
     performances : list
 
 @dataclass
 class Performance:
-    race  : str
-    id    : int
-    time  : int
-    place : int
+    distance : int
+    id       : int
+    time     : int
+    place    : int
 
 @dataclass
 class Athlete:
