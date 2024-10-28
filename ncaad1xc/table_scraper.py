@@ -1,6 +1,7 @@
 import bs4
 import re
 from dateutil import parser
+import datetime
 
 def get_race_tables(tables):
     women_table = None
@@ -49,7 +50,10 @@ def get_athlete_xc_meets(meets):
                 meettitle = tr.find('a')
                 meetdate  = tr.find('span')
                 
-                meetdate  = parser.parse(meetdate.text)
+                try:
+                    meetdate  = parser.parse(meetdate.text)
+                except parser.ParserError:
+                    meetdate = datetime.datetime(2022, 1, 1, 0, 0)
                 meetname  = meettitle.text
                 meetlink  = meettitle['href']
 
